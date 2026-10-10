@@ -1,0 +1,13 @@
+# Game images and converted output: never commit these
+*.iso
+*.ISO
+god/
+
+# Logs written by the scripts
+*.log
+
+# Local handoff notes (contain personal setup details)
+handoff.md
+
+# Your real settings (contains the FTP password)
+.env
