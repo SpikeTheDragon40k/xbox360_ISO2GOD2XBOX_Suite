@@ -1,5 +1,11 @@
 # xbox360-god-tools
 
+
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/spikethedragon)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20me-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/spike_the_dragon)
+
+
+
 Bash scripts for Linux that batch-convert Xbox 360 `.iso` images to
 **Games on Demand (GOD)** format and upload them to a modded Xbox 360 over FTP.
 
