@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISO2GOD2XBOX Suite</title>
+<meta name="description" content="Bash scripts for Linux that batch-convert Xbox 360 ISO images to Games on Demand (GOD) format and upload them to a modded Xbox 360 over FTP.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" href="logo.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ISO2GOD2XBOX Suite">
+<meta property="og:description" content="Turn your Xbox 360 ISOs into installed games: convert and upload in one go, from Linux.">
+<meta property="og:url" content="https://spikethedragon40k.github.io/xbox360_ISO2GOD2XBOX_Suite/">
+<meta property="og:image" content="https://spikethedragon40k.github.io/xbox360_ISO2GOD2XBOX_Suite/logo.png">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f0b; --surface:#141a14; --border:#243024; --text:#e6efe6; --muted:#9aab9a;
+  --accent:#5dc21e; --accent-2:#107c10; --code-bg:#0f140f;
+  --radius:12px; --max:1040px;
+  --sans:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 var(--sans);overflow-x:hidden}
+a{color:var(--accent)}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 16px}
+nav{position:sticky;top:0;z-index:10;background:rgba(11,15,11,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+nav .wrap{display:flex;align-items:center;gap:16px;height:56px}
+nav .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--text);text-decoration:none;white-space:nowrap}
+nav .brand img{width:28px;height:28px}
+nav .links{margin-left:auto;display:flex;gap:18px;font-size:14px}
+nav .links a{color:var(--muted);text-decoration:none}
+nav .links a:hover{color:var(--text)}
+@media (max-width:640px){nav .links a:not(.gh){display:none}}
+header.hero{padding:72px 0 56px;text-align:center;background:radial-gradient(ellipse at top,rgba(93,194,30,.16),transparent 60%)}
+.hero img{width:112px;height:112px}
+.hero h1{font-size:clamp(32px,6vw,52px);line-height:1.1;margin:20px 0 12px;letter-spacing:-.02em}
+.hero h1 span{color:var(--accent)}
+.hero p.tag{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:640px;margin:0 auto 28px}
+.flow{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:0 0 32px;font-family:var(--mono);font-size:14px}
+.flow b{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:6px 14px;font-weight:600}
+.flow i{color:var(--accent);font-style:normal}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.btn{display:inline-block;padding:12px 22px;border-radius:999px;font-weight:600;text-decoration:none;border:1px solid var(--accent)}
+.btn.primary{background:var(--accent);color:#0b0f0b}
+.btn.ghost{color:var(--accent)}
+.btn:hover{filter:brightness(1.1)}
+section{padding:64px 0;border-top:1px solid var(--border)}
+h2{font-size:clamp(26px,4vw,34px);margin:0 0 8px;letter-spacing:-.01em}
+.lead{color:var(--muted);margin:0 0 32px;max-width:720px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.card .ico{font-size:22px;margin-bottom:8px;display:block}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:20px}
+.steps>li{counter-increment:s;position:relative;padding:20px 20px 20px 68px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-width:0}
+.steps>li::before{content:counter(s);position:absolute;left:20px;top:20px;width:32px;height:32px;border-radius:50%;background:var(--accent-2);color:#fff;font-weight:800;display:grid;place-items:center}
+.steps h3{margin:0 0 6px;font-size:18px}
+.steps p{margin:0 0 10px}
+.steps p:last-child{margin-bottom:0}
+@media (max-width:480px){.steps>li{padding:64px 16px 16px}.steps>li::before{left:16px;top:16px}}
+code{font-family:var(--mono);font-size:.9em;background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:1px 5px}
+.code{position:relative;margin:12px 0}
+.code pre{margin:0;background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:16px;padding-right:72px;overflow-x:auto;font:13.5px/1.6 var(--mono)}
+.code pre code{background:none;border:0;padding:0;font-size:inherit}
+.code .copy{position:absolute;top:8px;right:8px;font:12px var(--sans);color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer}
+.code .copy:hover{color:var(--text)}
+.code .copy.ok{color:var(--accent);border-color:var(--accent)}
+.c{color:var(--muted)}
+.note{border-left:3px solid var(--accent);background:var(--surface);padding:12px 16px;border-radius:0 8px 8px 0;color:var(--muted);margin:12px 0}
+.note b{color:var(--text)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+.tbl{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--surface);font-weight:600}
+tr:last-child td{border-bottom:0}
+details{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px}
+summary{cursor:pointer;padding:16px 20px;font-weight:600;list-style:none;position:relative;padding-right:44px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:20px;top:14px;color:var(--accent);font-size:20px;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details>div{padding:0 20px 16px;color:var(--muted)}
+details>div p{margin:0 0 10px}
+footer{border-top:1px solid var(--border);padding:32px 0;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between}
+footer nav{all:unset;display:flex;flex-wrap:wrap;gap:16px}
+footer a{color:var(--muted)}
+footer a:hover{color:var(--text)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="logo.svg" alt="">ISO2GOD2XBOX Suite</a>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+      <a class="gh" href="https://github.com/SpikeTheDragon40k/xbox360_ISO2GOD2XBOX_Suite">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <img src="logo.svg" alt="ISO2GOD2XBOX Suite logo">
+    <h1>ISO2GOD2XBOX <span>Suite</span></h1>
+    <p class="tag">Turn your Xbox 360 ISOs into installed games: convert and upload in one go, from Linux.</p>
+    <div class="flow" aria-label="Pipeline: ISO, then GOD, then Xbox 360">
+      <b>.iso</b><i>→</i><b>Games on Demand</b><i>→</i><b>Xbox 360 over FTP</b>
+    </div>
+    <div class="btns">
+      <a class="btn primary" href="#how">Get started</a>
+      <a class="btn ghost" href="https://github.com/SpikeTheDragon40k/xbox360_ISO2GOD2XBOX_Suite">View on GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="features">
+  <div class="wrap">
+    <h2>What it does</h2>
+    <p class="lead">Three small Bash scripts: one converts, one uploads, and an optional menu runs both for you.</p>
+    <div class="grid">
+      <div class="card"><span class="ico">💿</span><h3>Batch conversion</h3><p>Converts every <code>.iso</code> in a folder to Games on Demand format with iso2god-rs, one after another.</p></div>
+      <div class="card"><span class="ico">🛡️</span><h3>Your ISOs stay safe</h3><p>An ISO is deleted only if the conversion succeeded <em>and</em> output was actually written. Not enough free disk space? The game is skipped. Pressing Ctrl+C never deletes the ISO being converted. Or keep every ISO with <code>-k</code>.</p></div>
+      <div class="card"><span class="ico">📶</span><h3>Upload with a live progress bar</h3><p>Sends each game to your console over FTP, with progress, speed and time left for each game and for the whole batch.</p></div>
+      <div class="card"><span class="ico">⏯️</span><h3>Resume where you left off</h3><p>Upload interrupted? Run it again. Files that are already on the console are skipped.</p></div>
+      <div class="card"><span class="ico">📋</span><h3>Friendly menu</h3><p>An optional text menu to preview, convert, upload, change settings and read logs, with no commands to remember.</p></div>
+      <div class="card"><span class="ico">🔑</span><h3>Set it up once</h3><p>All settings live in one <code>.env</code> file. It's only read, never run, and the FTP password never shows up in the process list.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="lead">New to this? Follow these steps in order. Each one tells you what you need and why.</p>
+    <ol class="steps">
+      <li>
+        <h3>Get your console ready</h3>
+        <p>You need a modded Xbox 360 running <b>Aurora</b> or <b>FreeStyle Dash</b>, with its <b>FTP server</b> turned on. FTP is how your PC copies files to the console over your home network.</p>
+        <p>Write down the console's IP address (something like <code>192.168.1.50</code>). The default FTP login on Aurora/FSD is <code>xboxftp</code> / <code>xboxftp</code>.</p>
+      </li>
+      <li>
+        <h3>Install what the scripts need</h3>
+        <p>You need Linux with Bash 4.3 or newer, plus:</p>
+        <p><b>iso2god-rs</b>, the converter. Get it from <a href="https://github.com/iliazeus/iso2god-rs">its GitHub page</a> and put it on your <code>PATH</code> named <code>iso2god</code>.</p>
+        <p><b>lftp</b> for uploading, and, only if you want the menu, <b>whiptail</b> or <b>dialog</b>:</p>
+        <div class="code"><pre><code><span class="c"># Debian / Ubuntu</span>
+sudo apt install lftp whiptail
+<span class="c"># Arch</span>
+sudo pacman -S lftp libnewt
+<span class="c"># Fedora</span>
+sudo dnf install lftp newt</code></pre></div>
+      </li>
+      <li>
+        <h3>Download the scripts and fill in your settings</h3>
+        <div class="code"><pre><code>git clone https://github.com/SpikeTheDragon40k/xbox360_ISO2GOD2XBOX_Suite.git
+cd xbox360_ISO2GOD2XBOX_Suite
+cp .env.example .env
+chmod 600 .env        <span class="c"># it holds your FTP password</span>
+nano .env</code></pre></div>
+        <p>The settings that matter most:</p>
+        <div class="tbl"><table>
+          <tr><th>Setting</th><th>What to put</th></tr>
+          <tr><td><code>ISO_DIR</code></td><td>The folder with your <code>.iso</code> files</td></tr>
+          <tr><td><code>GOD_DIR</code></td><td>Where converted games are saved (and uploaded from)</td></tr>
+          <tr><td><code>KEEP_ISOS</code></td><td><code>1</code> to keep ISOs after converting, <code>0</code> to delete them</td></tr>
+          <tr><td><code>XBOX_HOST</code></td><td>Your console's IP address</td></tr>
+          <tr><td><code>XBOX_REMOTE_PATH</code></td><td>Content folder on the console (default <code>/Hdd1/Content/0000000000000000</code>)</td></tr>
+          <tr><td><code>DELETE_AFTER_UPLOAD</code></td><td><code>1</code> to delete local games after a successful upload</td></tr>
+        </table></div>
+      </li>
+      <li>
+        <h3>The easy way: use the menu</h3>
+        <div class="code"><pre><code>./xbox360-tui.sh</code></pre></div>
+        <p>Pick <b>Convert</b>, <b>Upload</b>, or <b>Convert, then upload</b>. Each one shows you a preview first, so you can check what will happen before anything starts. You can also change settings and open the latest log from the menu.</p>
+      </li>
+      <li>
+        <h3>Or run the scripts yourself</h3>
+        <p>Add <code>-n</code> to any script for a dry run: it shows what it <em>would</em> do without changing anything.</p>
+        <div class="code"><pre><code>./iso2god-all.sh -n     <span class="c"># preview the conversion</span>
+./iso2god-all.sh        <span class="c"># convert ISOs to GOD</span>
+./god2xbox.sh -n        <span class="c"># preview the upload</span>
+./god2xbox.sh           <span class="c"># upload to the Xbox</span></code></pre></div>
+        <p>While uploading you'll see something like this:</p>
+        <div class="code"><pre><code>[3/12] 4D5307E6  Crackdown 2 (7.0 GB)
+  Game  [#################-------------]  58%  4.1 GB / 7.0 GB  10.8 MB/s  ETA 04:35
+  Total [######------------------------]  21%  16.4 GB / 78.0 GB  game 3/12  ETA 1:35:02</code></pre></div>
+      </li>
+      <li>
+        <h3>Make the games show up</h3>
+        <p>On the console, run a <b>content scan</b> in Aurora or FSD. Your new games will appear in the library.</p>
+      </li>
+    </ol>
+    <div class="note"><b>Behind the scenes:</b> lftp doesn't show usable progress when it's run from a script, so <code>god2xbox.sh</code> checks how far lftp has read into each file using Linux's <code>/proc/&lt;pid&gt;/fdinfo</code>. If that isn't available, it falls back to plain output.</div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>FAQ</h2>
+    <p class="lead">Common questions, answered from the project's documentation.</p>
+    <details><summary>What is "Games on Demand" (GOD) format?</summary><div><p>It's the format the Xbox 360 uses for games installed to its drive. Converting an ISO to GOD lets you launch it from Aurora or FreeStyle Dash without a disc. The conversion itself is done by <a href="https://github.com/iliazeus/iso2god-rs">iso2god-rs</a>.</p></div></details>
+    <details><summary>Will it delete my ISOs?</summary><div><p>By default, yes, but only after a conversion that succeeded and actually produced output. Set <code>KEEP_ISOS=1</code> or pass <code>-k</code> to keep them. Pressing Ctrl+C never deletes the ISO being converted. Each run writes a log file to the output folder.</p></div></details>
+    <details><summary>My upload stopped halfway. What now?</summary><div><p>Just run <code>./god2xbox.sh</code> again. Files that are already on the console are skipped, so it carries on from where it stopped.</p></div></details>
+    <details><summary>My games are on a USB drive, not the internal hard drive.</summary><div><p>Change <code>XBOX_REMOTE_PATH</code> (or pass <code>-r</code>), for example to a path under <code>/Usb0/</code>. If the folder you set doesn't exist, the script lists the folders at the top of the console's FTP server so you can pick the right one.</p></div></details>
+    <details><summary>I uploaded the games but can't see them.</summary><div><p>Run a content scan in Aurora or FSD after uploading.</p></div></details>
+    <details><summary>Does it work on Windows or macOS?</summary><div><p>It's written for Linux (Bash 4.3+). The live progress bar relies on Linux's <code>/proc</code>; elsewhere the upload falls back to plain output.</p></div></details>
+    <details><summary>Is my FTP password safe?</summary><div><p>Keep it in <code>.env</code> with <code>chmod 600</code>. The password is passed to lftp through an environment variable, so it never appears in the process list. Avoid <code>-p</code> on the command line, because it ends up in your shell history. <code>god2xbox.sh</code> warns you if <code>.env</code> is readable by other users, and <code>.env</code> is git-ignored.</p></div></details>
+    <details><summary>Can I use it for games I don't own?</summary><div><p>No. Only use these scripts with games you own.</p></div></details>
+  </div>
+</section>
+
+<section id="credits">
+  <div class="wrap">
+    <h2>Credits</h2>
+    <p class="lead">This suite is glue around some excellent tools:</p>
+    <div class="grid">
+      <div class="card"><h3><a href="https://github.com/iliazeus/iso2god-rs">iso2god-rs</a></h3><p>Does the actual ISO → GOD conversion.</p></div>
+      <div class="card"><h3>lftp</h3><p>Handles the FTP transfer and resuming.</p></div>
+      <div class="card"><h3>whiptail / dialog</h3><p>Draw the optional text menu.</p></div>
+    </div>
+    <p class="note">Not affiliated with Microsoft or with the iso2god-rs project.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>ISO2GOD2XBOX Suite · <a href="https://github.com/SpikeTheDragon40k/xbox360_ISO2GOD2XBOX_Suite/blob/main/LICENSE">MIT License</a></span>
+    <nav>
+      <a href="https://github.com/SpikeTheDragon40k/xbox360_ISO2GOD2XBOX_Suite">Source</a>
+      <a href="https://github.com/SpikeTheDragon40k/xbox360_ISO2GOD2XBOX_Suite/issues">Issues</a>
+      <a href="https://github.com/SpikeTheDragon40k/xbox360_ISO2GOD2XBOX_Suite/security">Security</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.code').forEach(function (box) {
+  var b = document.createElement('button');
+  b.className = 'copy'; b.type = 'button'; b.textContent = 'Copy';
+  b.addEventListener('click', function () {
+    var text = box.querySelector('pre').innerText;
+    var done = function () { b.textContent = 'Copied'; b.classList.add('ok');
+      setTimeout(function () { b.textContent = 'Copy'; b.classList.remove('ok'); }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+  });
+  box.appendChild(b);
+});
+</script>
+</body>
+</html>
